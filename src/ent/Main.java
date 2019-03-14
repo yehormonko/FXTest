@@ -1,5 +1,7 @@
 package ent;
 
+import controllers.Controller;
+import controllers.TestController;
 import ent.Ant;
 import ent.Food;
 import javafx.animation.PauseTransition;
@@ -12,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -23,15 +26,18 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
+
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
 public class Main extends Application {
     private Rectangle rectangle = new Rectangle(5, 5);
-    private static  volatile Group group = new Group();
-    private static  volatile ArrayList<Food>  foods= new ArrayList<Food>();
+    private static  Group group = new Group();
+    private static List<Food> foods= Collections.synchronizedList(new ArrayList<Food>());
     public static boolean isFoodThere(double x, double y){
         if(foods.isEmpty()) return false;
         for (Food food:foods) {
@@ -42,16 +48,22 @@ public class Main extends Application {
         return false;
     }
     public static void catchFood(double x, double y){
-        System.out.println("ate");
-        if(isFoodThere(x, y)){
-            if(!foods.isEmpty())
-            for (Food food:foods) {
-                if(food.getY()==y&& food.getX()==x){
-                    group.getChildren().remove(food.getCircle());
-                    foods.remove(food);
+                try {
+
+
+              if(isFoodThere(x, y)){
+                  if(!foods.isEmpty())
+                      for (Food food:foods) {
+                          if(food.getY()==y&& food.getX()==x){
+                             foods.remove(food);
+                             Platform.runLater(()->{group.getChildren().remove(food.getCircle());});
+
+                          }
+                      }
+              }
+                }catch (Exception e){
                 }
-            }
-        }
+
     }
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -59,13 +71,15 @@ public class Main extends Application {
         primaryStage.setTitle("Hello World");
         generateFood();
         drawLines(group);
-        Ant ant =generateAnt();
-        background(ant);
-        final Scene scene = new Scene(group, 1200, 800, Color.rgb(208, 236, 178));
+        //Ant ant =generateAnt();
+      //  background(ant);
+        game();
+        final Scene scene = new Scene(group, 1400, 800, Color.rgb(208, 236, 178));
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setScene(scene);
         primaryStage.toFront();
+
     }
     public void background(Ant ant) throws InterruptedException {
         Service<Void> service = new Service<Void>() {
@@ -99,6 +113,47 @@ public class Main extends Application {
         };
         service.start();
     }
+    private void game(){
+        Service<Void> service = new Service<Void>() {
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+
+
+                        Label label = new Label();
+                        label.setLayoutX(1300);
+                        label.setLayoutY(400);
+                        label.setText("0");
+                        group.getChildren().add(label);
+                        Ant ant = generateAnt();
+                        Controller controller  = new TestController(ant);
+                        while (!foods.isEmpty()){
+                            int a = controller.tick();
+                            Platform.runLater(()->{label.setText(a+"");});
+                            ant.endTurn();
+                        }
+
+
+
+
+
+
+
+
+
+
+
+                        return null;
+                    }
+
+                };
+
+            }
+        };
+        service.start();
+    }
     private Ant generateAnt(){
         Random rand = new Random();
         int pre =  rand.nextInt(240*5);
@@ -115,13 +170,15 @@ public class Main extends Application {
         home.setStroke(Color.RED);
         home.setX(x);
         home.setY(y);
+        home.toFront();
+        ant.toFront();
         group.getChildren().add(ant);
         group.getChildren().add(home);
         return new Ant(ant);
     }
     private void generateFood(){
         Random rand = new Random();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000; i++) {
             int pre =  rand.nextInt(240*5);
             int mod = 5-pre%5;
             int x =pre+mod;
@@ -169,7 +226,9 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-        launch(args);
+
+            launch(args);
+
 
     }
 }

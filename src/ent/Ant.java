@@ -1,10 +1,16 @@
 package ent;
 
+import javafx.application.Platform;
 import javafx.scene.shape.Rectangle;
 
 public class Ant {
     private Rectangle body;
     private boolean loaded = false;
+
+    public int getHomeScore() {
+        return homeScore;
+    }
+
     private int homeScore = 0;
     private int movePoints = 4;
     protected void endTurn(){
@@ -52,6 +58,9 @@ public class Ant {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+    public boolean isLoaded(){
+        return loaded;
     }
     public  void moveUp(){
         if(movePoints<2) return;
