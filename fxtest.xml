@@ -134,7 +134,7 @@
       <exclude name="FXTest.jar"/>
     </fx:fileset>
     <fx:fileset id="all_FXTest" dir="${artifact.temp.output.FXTest}" includes="**/*.jar"/>
-    <fx:application id="FXTest_id" name="FXTest" mainClass="sample.Main"/>
+    <fx:application id="FXTest_id" name="FXTest" mainClass="ent.Main"/>
     <fx:jar destfile="${artifact.temp.output.FXTest}/FXTest.jar">
       <fx:application refid="FXTest_id"/>
       <fileset dir="${artifact.temp.output.FXTest}" excludes="**/*.jar"/>

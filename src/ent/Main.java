@@ -1,4 +1,4 @@
-package sample;
+package ent;
 
 import ent.Ant;
 import ent.Food;
@@ -59,6 +59,8 @@ public class Main extends Application {
         primaryStage.setTitle("Hello World");
         generateFood();
         drawLines(group);
+        Ant ant =generateAnt();
+        background(ant);
         final Scene scene = new Scene(group, 1200, 800, Color.rgb(208, 236, 178));
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -72,12 +74,22 @@ public class Main extends Application {
                 return new Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
-                        System.out.println(foods.get(0).getX()+" "+foods.get(0).getY());
-                        System.out.println(ant.checkFoodLeft());
-                        System.out.println(ant.checkFoodRight());
-                        System.out.println(ant.checkFoodUp());
-                        System.out.println(ant.checkFoodDown());
-                        ant.catchFoodUp();
+                        for (int i=0;i<100; i++){
+                            System.out.println(ant.isOnBorder());
+                            ant.moveDown();
+                            ant.endTurn();
+                        }
+                        for (int i=0;i<100; i++){
+                            ant.moveUp();
+                            ant.endTurn();
+                        }
+                        System.out.println(ant.isAtHome());
+//                        System.out.println(foods.get(0).getX()+" "+foods.get(0).getY());
+//                        System.out.println(ant.checkFoodLeft());
+//                        System.out.println(ant.checkFoodRight());
+//                        System.out.println(ant.checkFoodUp());
+//                        System.out.println(ant.checkFoodDown());
+//                        ant.catchFoodUp();
                     return null;
                      }
 
@@ -87,9 +99,29 @@ public class Main extends Application {
         };
         service.start();
     }
+    private Ant generateAnt(){
+        Random rand = new Random();
+        int pre =  rand.nextInt(240*5);
+        int mod = 5-pre%5;
+        int x =pre+mod;
+        pre = rand.nextInt(160*5);
+        mod = 5-pre%5;
+        int y = pre+mod;
+        Rectangle ant = new Rectangle(5, 5);
+        ant.setStroke(Color.BLACK);
+        ant.setX(x);
+        ant.setY(y);
+        Rectangle home = new Rectangle(5,5);
+        home.setStroke(Color.RED);
+        home.setX(x);
+        home.setY(y);
+        group.getChildren().add(ant);
+        group.getChildren().add(home);
+        return new Ant(ant);
+    }
     private void generateFood(){
         Random rand = new Random();
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 100; i++) {
             int pre =  rand.nextInt(240*5);
             int mod = 5-pre%5;
             int x =pre+mod;
