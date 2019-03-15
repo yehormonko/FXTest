@@ -32,13 +32,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 
 public class Main extends Application {
     private Rectangle rectangle = new Rectangle(5, 5);
     private static  Group group = new Group();
-    private static List<Food> foods= Collections.synchronizedList(new ArrayList<Food>());
-    public static boolean isFoodThere(double x, double y){
+    private static CopyOnWriteArrayList<Food> foods= new CopyOnWriteArrayList<Food>();
+    protected static boolean isFoodThere(double x, double y){
         if(foods.isEmpty()) return false;
         for (Food food:foods) {
             if(food.getX()==x&&food.getY()==y){
@@ -47,7 +48,7 @@ public class Main extends Application {
         }
         return false;
     }
-    public static void catchFood(double x, double y){
+    protected static void catchFood(double x, double y){
                 try {
 
 
@@ -55,13 +56,13 @@ public class Main extends Application {
                   if(!foods.isEmpty())
                       for (Food food:foods) {
                           if(food.getY()==y&& food.getX()==x){
-                             foods.remove(food);
-                             Platform.runLater(()->{group.getChildren().remove(food.getCircle());});
-
+                              foods.remove(food);
+                              Platform.runLater(()->{group.getChildren().remove(food.getCircle());});
                           }
                       }
               }
                 }catch (Exception e){
+                    e.printStackTrace();
                 }
 
     }
@@ -73,6 +74,7 @@ public class Main extends Application {
         drawLines(group);
         //Ant ant =generateAnt();
       //  background(ant);
+        Platform.setImplicitExit( false );
         game();
         final Scene scene = new Scene(group, 1400, 800, Color.rgb(208, 236, 178));
         primaryStage.setScene(scene);
