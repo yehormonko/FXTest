@@ -36,6 +36,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 
 public class Main extends Application {
+    protected static final int X_SIZE = 1200;
+    protected static final int Y_SIZE = 800;
     private Rectangle rectangle = new Rectangle(5, 5);
     private static  Group group = new Group();
     private static CopyOnWriteArrayList<Food> foods= new CopyOnWriteArrayList<Food>();
@@ -77,7 +79,7 @@ public class Main extends Application {
       //  background(ant);
         Platform.setImplicitExit( false );
         game();
-        final Scene scene = new Scene(group, 1400, 800, Color.rgb(208, 236, 178));
+        final Scene scene = new Scene(group, X_SIZE+200, Y_SIZE, Color.rgb(208, 236, 178));
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setScene(scene);
@@ -126,8 +128,8 @@ public class Main extends Application {
 
 
                         Label label = new Label();
-                        label.setLayoutX(1300);
-                        label.setLayoutY(400);
+                        label.setLayoutX(X_SIZE+100);
+                        label.setLayoutY(Y_SIZE/2);
                         label.setText("0");
                         group.getChildren().add(label);
                         Ant ant = generateAnt();
@@ -156,13 +158,14 @@ public class Main extends Application {
             }
         };
         service.start();
+        
     }
     private Ant generateAnt(){
         Random rand = new Random();
-        int pre =  rand.nextInt(240*5);
+        int pre =  rand.nextInt(X_SIZE);
         int mod = 5-pre%5;
         int x =pre+mod;
-        pre = rand.nextInt(160*5);
+        pre = rand.nextInt(Y_SIZE);
         mod = 5-pre%5;
         int y = pre+mod;
         Rectangle ant = new Rectangle(5, 5);
@@ -182,10 +185,10 @@ public class Main extends Application {
     private void generateFood(){
         Random rand = new Random();
         for (int i = 0; i < 1000; i++) {
-            int pre =  rand.nextInt(240*5);
+            int pre =  rand.nextInt(X_SIZE);
             int mod = 5-pre%5;
             int x =pre+mod;
-            pre = rand.nextInt(160*5);
+            pre = rand.nextInt(Y_SIZE);
             mod = 5-pre%5;
             int y = pre+mod;
             if(isFoodThere(x, y)){
@@ -202,25 +205,25 @@ public class Main extends Application {
     }
     public void drawLines(Group group){
         int linesx = 0;
-        for(int i = 0; i<1200; i+=5){
+        for(int i = 0; i<X_SIZE; i+=5){
         Line line = new Line();
         line.setStroke(Color.rgb(74, 115, 30));
         line.setStartX(i);
         line.setEndX(i);
         line.setStartY(0);
-        line.setEndY(800);
+        line.setEndY(Y_SIZE);
         group.getChildren().add(line);
         linesx++;
         }
         System.out.println(linesx);
         int linesy = 0;
-        for(int i = 0; i<1200; i+=5){
+        for(int i = 0; i<Y_SIZE; i+=5){
             Line line = new Line();
             line.setStartY(i);
             line.setStroke(Color.rgb(74, 115, 30));
             line.setEndY(i);
             line.setStartX(0);
-            line.setEndX(1200);
+            line.setEndX(X_SIZE);
             group.getChildren().add(line);
             linesy++;
         }

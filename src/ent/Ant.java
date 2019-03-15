@@ -33,14 +33,14 @@ public class Ant {
         }
     }
     public boolean isOnBorder(){
-        if(body.getX()-5==0||body.getX()+5==1200||
-                body.getY()+5==800||body.getY()-5==0) return true;
+        if(body.getX()-5==0||body.getX()+5==Main.X_SIZE||
+                body.getY()+5==Main.Y_SIZE||body.getY()-5==0) return true;
         return false;
     }
     public void moveRight(){
         if(movePoints<2) return;
         movePoints-=2;
-        if(body.getX()+5>1200) return;
+        if(body.getX()+5>Main.X_SIZE) return;
         body.setX(body.getX()+5);
         try {
             Thread.sleep(30);
@@ -51,7 +51,7 @@ public class Ant {
     public void moveDown(){
         if(movePoints<2) return;
         movePoints-=2;
-        if(body.getY()+5>800) return;
+        if(body.getY()+5>Main.Y_SIZE) return;
         body.setY(body.getY()+5);
         try {
             Thread.sleep(30);
