@@ -77,6 +77,11 @@ public class Ant {
     private double yHome;
     public void catchFoodUp(){
         if(!loaded){
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             Main.catchFood(body.getX(), body.getY()-5);
             loaded=true;
         }

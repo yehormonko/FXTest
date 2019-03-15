@@ -57,6 +57,7 @@ public class Main extends Application {
                       for (Food food:foods) {
                           if(food.getY()==y&& food.getX()==x){
                               foods.remove(food);
+                              Thread.sleep(100);
                               Platform.runLater(()->{group.getChildren().remove(food.getCircle());});
                           }
                       }
